@@ -16,7 +16,7 @@ function ProviderLogin(){
         providerLogIn(loginForm)
             .then(function (response){
                 if(response){
-                    navigate("/")
+                    navigate("/provider-dashboard")
                 }
                 else{
                     console.log("try again")
@@ -37,7 +37,7 @@ function ProviderLogin(){
                         <label className="text-2xl">Provider ID</label>
                         <input onChange={onFormChange} type="number" name="id" className="p-2 w-2/3 border-2 border-stone-50 rounded-md"/>
                     </div>
-                    <button onClick={() => providerLogIn(loginForm)} className=" w-full m-5 text-xl bg-cyan-400 p-2 rounded-full text-white hover:bg-cyan-500 duration-300 transition ease-in-out drop-shadow-sm ">Log In</button>
+                    <button onClick={login} className=" w-full m-5 text-xl bg-cyan-400 p-2 rounded-full text-white hover:bg-cyan-500 duration-300 transition ease-in-out drop-shadow-sm ">Log In</button>
                 </form>
             </div>
         </div>

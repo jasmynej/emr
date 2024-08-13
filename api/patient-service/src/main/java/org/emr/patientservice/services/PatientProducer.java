@@ -13,7 +13,7 @@ public class PatientProducer {
     private RabbitTemplate rabbitTemplate;
 
     public void sendNewPatient(Patient patient) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME,"patient.create",patient);
+        rabbitTemplate.convertAndSend("patientExchange","patient.create",patient);
         System.out.println("Patient Sent "+ patient);
     }
 

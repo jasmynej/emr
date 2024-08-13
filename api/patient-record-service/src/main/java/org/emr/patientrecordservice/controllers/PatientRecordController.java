@@ -1,11 +1,10 @@
 package org.emr.patientrecordservice.controllers;
 
 
-import org.emr.patientrecordservice.models.LabResult;
-import org.emr.patientrecordservice.models.PatientRecord;
-import org.emr.patientrecordservice.models.Treatment;
-import org.emr.patientrecordservice.models.Visit;
+import org.emr.patientrecordservice.models.*;
 import org.emr.patientrecordservice.repos.PatientRecordRepository;
+import org.emr.patientrecordservice.services.InvoiceProducer;
+import org.emr.patientrecordservice.services.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +17,13 @@ import java.util.List;
 public class PatientRecordController {
     @Autowired
     private PatientRecordRepository patientRecordRepository;
+
+    @Autowired
+    private InvoiceProducer invoiceProducer;
+
+
+    @Autowired
+    private VisitService visitService;
 
     @GetMapping("")
     public List<PatientRecord> getAllPatientRecords() {
@@ -68,6 +74,9 @@ public class PatientRecordController {
         }
         visits.add(visit);
         patientRecord.setVisits(visits);
+
+        NewInvoice invoiceRequest = new NewInvoice("visit",patientId,visit.getHealthcareProviderId());
+        invoiceProducer.sendInvoiceRequest(invoiceRequest);
         return patientRecordRepository.save(patientRecord);
     }
 
@@ -81,6 +90,18 @@ public class PatientRecordController {
         }
         labs.add(lab);
         patientRecord.setLabs(labs);
+        NewInvoice invoiceRequest = new NewInvoice("lab",patientId,null);
+        invoiceProducer.sendInvoiceRequest(invoiceRequest);
         return patientRecordRepository.save(patientRecord);
+    }
+
+    @GetMapping("/visits")
+    public List<Visit> getVisits() {
+        return visitService.allVisits();
+    }
+
+    @GetMapping("/visits/{providerId}")
+    public List<Visit> getVisitsByProviderId(@PathVariable long providerId) {
+        return visitService.visitsByProvider(providerId);
     }
 }

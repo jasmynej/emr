@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="patients")
@@ -31,4 +32,8 @@ public class Patient {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToMany
+    @JoinColumn(name="patient_id", referencedColumnName = "id")
+    private List<Notification> notifications;
 }

@@ -11,17 +11,20 @@ import org.springframework.amqp.support.converter.MessageConverter;
 
 @Configuration
 public class RabbitMQConfig {
-    public static final String QUEUE_NAME = "newPatientQueue";
-    public static final String EXCHANGE_NAME = "patientExchange";
+
 
     @Bean
-    public Queue queue() {
-        return new Queue(QUEUE_NAME);
+    public Queue newPatientQueue() {
+        return new Queue("newPatientQueue");
     }
 
     @Bean
+    public Queue notificationQueue(){
+        return new Queue("notificationQueue");
+    }
+    @Bean
     public DirectExchange exchange() {
-        return new DirectExchange(EXCHANGE_NAME);
+        return new DirectExchange("patientExchange");
     }
 
     @Bean
@@ -30,9 +33,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("patient.create");
+    public Binding binding(Queue newPatientQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(newPatientQueue).to(exchange).with("patient.create");
     }
+
+    @Bean
+    public Binding notificationBinding(Queue notificationQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(notificationQueue).to(exchange).with("patient.notification");
+    }
+
+
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {

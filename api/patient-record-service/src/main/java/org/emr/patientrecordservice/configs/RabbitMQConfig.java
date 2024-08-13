@@ -10,24 +10,31 @@ import org.springframework.amqp.support.converter.MessageConverter;
 @EnableRabbit
 public class RabbitMQConfig {
 
-    public static final String QUEUE_NAME = "newPatientQueue";
-    public static final String EXCHANGE_NAME = "patientExchange";
+
 
     @Bean
-    public Queue queue() {
-        return new Queue(QUEUE_NAME, true);  // true makes the queue durable
+    public Queue newPatientQueue() {
+        return new Queue("newPatientQueue", true);  // true makes the queue durable
     }
 
+    @Bean
+    public Queue invoiceCreationQueue() {
+        return new Queue("invoiceCreationQueue", true);
+    }
     @Bean
     public DirectExchange exchange() {
-        return new DirectExchange(EXCHANGE_NAME);
+        return new DirectExchange("patientExchange");
     }
 
     @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("patient.create");
+    public Binding newPatientQueueBinding(Queue newPatientQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(newPatientQueue).to(exchange).with("patient.create");
     }
 
+    @Bean
+    public Binding invoiceCreationQueueBinding(Queue invoiceCreationQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(invoiceCreationQueue).to(exchange).with("patient.invoice");
+    }
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

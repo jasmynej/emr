@@ -15,7 +15,7 @@ public class PatientConsumer {
     @Autowired
     private PatientRecordRepository patientRecordRepository;
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
+    @RabbitListener(queues = "newPatientQueue")
     public void getSentPatient(PatientDTO patientDTO) {
         PatientRecord patientRecord = new PatientRecord();
         patientRecord.setPatientId(patientDTO.getId());

@@ -6,9 +6,11 @@ import {
 } from "react-router-dom";
 import App from './App.jsx'
 import './index.css'
+import "@flaticon/flaticon-uicons/css/all/all.css";
 import PatientLogIn from "./screens/PatientLogIn.jsx";
 import ProviderLogin from "./screens/ProviderLogin.jsx";
 import PatientDashboard from "./screens/patient/PatientDashboard.jsx";
+import ProviderDashboard from "./screens/provider/ProviderDashboard.jsx";
 
 const router = createBrowserRouter(
     [
@@ -27,6 +29,10 @@ const router = createBrowserRouter(
         {
             path:"/patient-dashboard",
             element:<PatientDashboard/>
+        },
+        {
+            path:"/provider-dashboard",
+            element:<ProviderDashboard/>
         }
     ]
 )
