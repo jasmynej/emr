@@ -4,6 +4,7 @@ package org.emr.patientrecordservice.controllers;
 import org.emr.patientrecordservice.models.*;
 import org.emr.patientrecordservice.repos.PatientRecordRepository;
 import org.emr.patientrecordservice.services.InvoiceProducer;
+import org.emr.patientrecordservice.services.NotificationProducer;
 import org.emr.patientrecordservice.services.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,9 @@ public class PatientRecordController {
 
     @Autowired
     private VisitService visitService;
+
+    @Autowired
+    private NotificationProducer notificationProducer;
 
     @GetMapping("")
     public List<PatientRecord> getAllPatientRecords() {
@@ -77,6 +81,7 @@ public class PatientRecordController {
 
         NewInvoice invoiceRequest = new NewInvoice("visit",patientId,visit.getHealthcareProviderId());
         invoiceProducer.sendInvoiceRequest(invoiceRequest);
+        notificationProducer.sendProviderNotification(new ProviderNotification(visit.getHealthcareProviderId(),"new_appt","New Appointment Added for Patient Id "+patientId));
         return patientRecordRepository.save(patientRecord);
     }
 
@@ -92,6 +97,7 @@ public class PatientRecordController {
         patientRecord.setLabs(labs);
         NewInvoice invoiceRequest = new NewInvoice("lab",patientId,null);
         invoiceProducer.sendInvoiceRequest(invoiceRequest);
+
         return patientRecordRepository.save(patientRecord);
     }
 
