@@ -19,3 +19,7 @@
 .active {
     @apply bg-white text-black p-1.5 rounded-full
 }
+
+.nav-container {
+    @apply w-screen h-24 bg-white flex justify-between items-center
+}
